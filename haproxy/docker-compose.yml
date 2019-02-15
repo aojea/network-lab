@@ -1,0 +1,43 @@
+version: '3'
+ 
+services:
+    backend1:
+      container_name: backend1
+      image: nginx
+      command: /bin/bash -c "echo Backend1 > /usr/share/nginx/html/index.html && exec nginx -g 'daemon off;'"
+      networks:
+        internal:
+          ipv4_address: 172.16.238.10
+
+    backend2:
+      container_name: backend2
+      image: nginx
+      command: /bin/bash -c "echo Backend2 > /usr/share/nginx/html/index.html && exec nginx -g 'daemon off;'"
+      networks:
+        internal:
+          ipv4_address: 172.16.238.20
+
+    backend3:
+      container_name: backend3
+      image: nginx
+      command: /bin/bash -c "echo Backend3 > /usr/share/nginx/html/index.html && exec nginx -g 'daemon off;'"
+      networks:
+        internal:
+          ipv4_address: 172.16.238.30
+
+    haproxy:
+      image: haproxy:1.6
+      volumes:
+        - ${PWD}/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg
+      networks:
+        internal:
+          ipv4_address: 172.16.238.5
+
+networks:
+    internal:
+      driver: bridge
+      ipam:
+        driver: default
+        config:
+          - subnet: 172.16.238.0/24
+
